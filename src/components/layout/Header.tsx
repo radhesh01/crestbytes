@@ -1,17 +1,22 @@
+'use client'
+
 import { useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import Button from '../ui/Button'
 
 const NAV_LINKS = [
-  { label: 'Work', href: '#work' },
-  { label: 'Services', href: '#services' },
-  { label: 'About', href: '#about' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Work', to: '/projects' },
+  { label: 'Services', to: '/services' },
+  { label: 'About', to: '/about' },
+  { label: 'Contact', to: '/contact' },
 ]
 
 function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const menuButtonRef = useRef<HTMLButtonElement>(null)
+  const pathname = usePathname()
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 8)
@@ -19,6 +24,10 @@ function Header() {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  useEffect(() => {
+    setIsMenuOpen(false)
+  }, [pathname])
 
   useEffect(() => {
     if (!isMenuOpen) return
@@ -45,24 +54,33 @@ function Header() {
   return (
     <header className={`header ${isScrolled ? 'header--scrolled' : ''}`}>
       <div className="container header__inner">
-        <a href="#top" className="header__logo" aria-label="CrestBytes — home">
+        <Link href="/" className="header__logo" aria-label="CrestBytes — home">
           CrestBytes
-        </a>
+        </Link>
 
         <nav className="header__nav" aria-label="Primary">
           <ul className="header__nav-list">
-            {NAV_LINKS.map((link) => (
-              <li key={link.href}>
-                <a href={link.href} className="header__nav-link">
-                  {link.label}
-                </a>
-              </li>
-            ))}
+            {NAV_LINKS.map((link) => {
+              const isActive = pathname === link.to
+              return (
+                <li key={link.to}>
+                  <Link
+                    href={link.to}
+                    className={`header__nav-link ${isActive ? 'header__nav-link--active' : ''}`}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              )
+            })}
           </ul>
         </nav>
 
         <div className="header__cta">
-          <Button href="#contact" variant="primary">
+          <Button href="/schedule" variant="text" className="header__cta-secondary">
+            Book a Meeting
+          </Button>
+          <Button href="/contact" variant="primary">
             Start a Project
           </Button>
         </div>
@@ -103,28 +121,42 @@ function Header() {
       >
         <nav aria-label="Mobile">
           <ul className="mobile-menu__list">
-            {NAV_LINKS.map((link) => (
-              <li key={link.href}>
-                
-                  href={link.href}
-                  className="mobile-menu__link"
-                  onClick={closeMenu}
-                  tabIndex={isMenuOpen ? 0 : -1}
-                <a>
-                  {link.label}
-                </a>
-              </li>
-            ))}
+            {NAV_LINKS.map((link) => {
+              const isActive = pathname === link.to
+              return (
+                <li key={link.to}>
+                  <Link
+                    href={link.to}
+                    className={`mobile-menu__link ${isActive ? 'mobile-menu__link--active' : ''}`}
+                    onClick={closeMenu}
+                    tabIndex={isMenuOpen ? 0 : -1}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              )
+            })}
           </ul>
-          <Button
-            href="#contact"
-            variant="primary"
-            className="mobile-menu__cta"
-            onClick={closeMenu}
-            tabIndex={isMenuOpen ? 0 : -1}
-          >
-            Start a Project
-          </Button>
+          <div className="mobile-menu__actions">
+            <Button
+              href="/schedule"
+              variant="secondary"
+              className="mobile-menu__cta"
+              onClick={closeMenu}
+              tabIndex={isMenuOpen ? 0 : -1}
+            >
+              Book a Meeting
+            </Button>
+            <Button
+              href="/contact"
+              variant="primary"
+              className="mobile-menu__cta"
+              onClick={closeMenu}
+              tabIndex={isMenuOpen ? 0 : -1}
+            >
+              Start a Project
+            </Button>
+          </div>
         </nav>
       </div>
     </header>
