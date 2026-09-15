@@ -6,11 +6,16 @@ export type ProjectCategory =
   | 'Agency'
   | 'SaaS'
   | 'Landing Page'
-  | 'Custom Web Application';
+  | 'Custom Web Application'
+  | 'Creative / Digital Agency'
+  | 'Healthcare / Pharmaceutical Platform'
+  | string;
 
 export interface ProjectImage {
   src: string;
   alt: string;
+  width?: number;
+  height?: number;
 }
 
 export interface ProjectScreenshots {
@@ -28,13 +33,17 @@ export interface Project {
   name: string;
   client: string;
   category: ProjectCategory;
-  shortDescription: string;
+  description: string;
+  shortDescription?: string;
   detailedDescription?: string;
-  logo?: ProjectImage;
-  screenshots: ProjectScreenshots;
-  /** Real, direct URL only. Omit if no live project URL exists. */
+  url: string;
   projectUrl?: string;
+  logo?: ProjectImage;
+  desktopScreenshot: ProjectImage;
+  mobileScreenshot: ProjectImage;
+  screenshots?: ProjectScreenshots;
   technologies: string[];
   results?: ProjectResult[];
   featured: boolean;
+  year?: string;
 }

@@ -1,9 +1,16 @@
 import './globals.css'
 import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
 import Header from '../components/layout/Header'
 import Footer from '../components/layout/Footer'
-import ScrollToTop from '../components/layout/ScrollToTop'
 import PageTransition from '../components/layout/PageTransition'
+import CustomCursor from '../components/ui/CustomCursor'
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+})
 
 export const metadata: Metadata = {
   title: 'CrestBytes — Premium Web Design & Development',
@@ -16,16 +23,16 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${inter.variable}`}>
       <body>
         <div className="app-root">
-          <ScrollToTop />
           <Header />
           <main className="app-main">
             <PageTransition>{children}</PageTransition>
           </main>
           <Footer />
         </div>
+        <CustomCursor />
       </body>
     </html>
   )
