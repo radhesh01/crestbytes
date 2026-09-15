@@ -2,14 +2,16 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import Button from '../ui/Button'
+import { siteConfig } from '../../data/site'
 
 const NAV_LINKS = [
-  { index: '01', label: 'Work', to: '/projects' },
-  { index: '02', label: 'Services', to: '/services' },
-  { index: '03', label: 'About', to: '/about' },
-  { index: '04', label: 'Contact', to: '/contact' },
+  { label: 'Work', to: '/projects' },
+  { label: 'Services', to: '/services' },
+  { label: 'About', to: '/about' },
+  { label: 'Contact', to: '/contact' },
 ]
 
 function Header() {
@@ -24,7 +26,7 @@ function Header() {
 
     const updateScroll = () => {
       const y = window.scrollY
-      setIsScrolled(y > 24)
+      setIsScrolled(y > 20)
 
       const docHeight = document.documentElement.scrollHeight - window.innerHeight
       const pct = docHeight > 0 ? Math.min(Math.max(y / docHeight, 0), 1) : 0
@@ -49,22 +51,13 @@ function Header() {
   }, [pathname])
 
   useEffect(() => {
-    if (!isMenuOpen) return
-
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setIsMenuOpen(false)
-        menuButtonRef.current?.focus()
-      }
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
     }
-
-    document.addEventListener('keydown', onKeyDown)
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-
     return () => {
-      document.removeEventListener('keydown', onKeyDown)
-      document.body.style.overflow = previousOverflow
+      document.body.style.overflow = ''
     }
   }, [isMenuOpen])
 
@@ -80,16 +73,19 @@ function Header() {
       />
 
       <div className="container header__inner">
-        {/* Brand Logo & Studio Identity Badge */}
-        <Link href="/" className="header__logo" aria-label="CrestBytes — Home">
-          <span className="header__logo-text">CrestBytes</span>
-          <span className="header__logo-dot" aria-hidden="true" />
-          <span className="header__logo-sub hide-on-mobile" aria-hidden="true">
-            STUDIO
-          </span>
+        {/* Brand Logo */}
+        <Link href="/" className="header__logo" aria-label="CrestBytes home">
+          <Image
+            src={siteConfig.logo}
+            alt="CrestBytes"
+            width={140}
+            height={38}
+            priority
+            className="header__logo-img"
+          />
         </Link>
 
-        {/* Primary Desktop Navigation System */}
+        {/* Primary Desktop Navigation */}
         <nav className="header__nav" aria-label="Primary navigation">
           <ul className="header__nav-list">
             {NAV_LINKS.map((link) => {
@@ -101,7 +97,6 @@ function Header() {
                     className={`header__nav-link ${isActive ? 'header__nav-link--active' : ''}`}
                     aria-current={isActive ? 'page' : undefined}
                   >
-                    <span className="header__nav-index">{link.index}</span>
                     <span className="header__nav-text">{link.label}</span>
                     <span className="header__nav-indicator" aria-hidden="true" />
                   </Link>
@@ -111,7 +106,7 @@ function Header() {
           </ul>
         </nav>
 
-        {/* Desktop CTA Action Group */}
+        {/* Desktop CTA Group */}
         <div className="header__cta">
           <Button href="/schedule" variant="text" className="header__cta-secondary">
             Book a Meeting
@@ -154,23 +149,16 @@ function Header() {
         </button>
       </div>
 
-      {/* Full-Screen Mobile Navigation Layer with Technical Metadata */}
+      {/* Full-Screen Mobile Navigation Layer */}
       <div
         id="mobile-menu"
         className={`mobile-menu ${isMenuOpen ? 'mobile-menu--open' : ''}`}
         aria-hidden={!isMenuOpen}
       >
         <div className="mobile-menu__inner container">
-          {/* Header Metadata in Drawer */}
-          <div className="mobile-menu__header-meta">
-            <div className="mobile-menu__eyebrow">
-              <span className="mobile-menu__eyebrow-dot" aria-hidden="true" />
-              <span>CRESTBYTES // DIGITAL STUDIO</span>
-            </div>
-            <div className="mobile-menu__status">
-              <span className="mobile-menu__status-dot" aria-hidden="true" />
-              <span>SYSTEM: ONLINE</span>
-            </div>
+          <div className="mobile-menu__eyebrow">
+            <span className="mobile-menu__eyebrow-dot" aria-hidden="true" />
+            <span>NAVIGATION</span>
           </div>
 
           <nav aria-label="Mobile navigation" className="mobile-menu__nav">
@@ -190,7 +178,7 @@ function Header() {
                       tabIndex={isMenuOpen ? 0 : -1}
                       aria-current={isActive ? 'page' : undefined}
                     >
-                      <span className="mobile-menu__link-num">{link.index}</span>
+                      <span className="mobile-menu__link-num">0{i + 1}</span>
                       <span className="mobile-menu__link-text">{link.label}</span>
                       <svg
                         width="16"
@@ -253,11 +241,6 @@ function Header() {
             >
               Book a Meeting
             </Button>
-          </div>
-
-          <div className="mobile-menu__footer-telemetry">
-            <span>LAT: 28.6139° N, 77.2090° E</span>
-            <span>NEXT.JS APP ROUTER // STATIC</span>
           </div>
         </div>
       </div>

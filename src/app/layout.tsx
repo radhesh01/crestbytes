@@ -13,8 +13,35 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://crestbytes.com'),
   title: 'CrestBytes — Premium Web Design & Development',
-  description: 'A premium digital agency designing and building websites and digital experiences for ambitious brands.',
+  description: 'A premium digital studio designing and building refined websites and digital experiences for ambitious brands.',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
+  openGraph: {
+    title: 'CrestBytes — Premium Web Design & Development',
+    description: 'A premium digital studio designing and building refined websites and digital experiences for ambitious brands.',
+    url: 'https://crestbytes.com',
+    siteName: 'CrestBytes',
+    images: [
+      {
+        url: '/brand/crestbytes-logo.png',
+        width: 1536,
+        height: 1024,
+        alt: 'CrestBytes — Code • Design • Digital Impact',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
 }
 
 export default function RootLayout({
